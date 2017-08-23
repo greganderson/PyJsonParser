@@ -1,0 +1,3 @@
+#!/bin/bash
+
+jsonparse $1 | pygmentize -l json
