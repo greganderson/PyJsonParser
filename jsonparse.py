@@ -1,0 +1,66 @@
+#!/usr/bin/python
+
+import json
+import sys
+
+
+if len(sys.argv) != 2:
+	print 'Please supply a target key to search for.'
+	exit(1)
+
+target = sys.argv[1]
+jsonoutput = json.loads(sys.stdin.read().rstrip())
+obj = {}
+lst = []
+
+results = []
+
+def read_object(jsonobj):
+	obj_results = []
+	for key, value in jsonobj.iteritems():
+		if key == target:
+			result = {key: value}
+			obj_results.append(result)
+
+		elif type(value) == type(obj):
+			result = read_object(value)
+			if result is not None:
+				result = {key: result}
+				obj_results.append(result)
+
+		elif type(value) == type(lst):
+			result = read_list(value)
+			if result is not None:
+				result = {key: result}
+				obj_results.append(result)
+	if len(obj_results) == 0:
+		return None
+	return obj_results
+
+def read_list(jsonlist):
+	lst_results = []
+	for item in jsonlist:
+		if type(item) == type(obj):
+			result = read_object(item)
+			if result is not None:
+				lst_results.append(result)
+
+		elif type(item) == type(lst):
+			result = read_list(item)
+			if result is not None:
+				lst_results.append(result)
+
+		elif item == target:
+			lst_results.append(item)
+	if len(lst_results) == 0:
+		return None
+	return lst_results
+
+
+
+if type(jsonoutput) == type(obj):
+	result = read_object(jsonoutput)
+else:
+	result = read_list(jsonoutput)
+
+print json.dumps(result, indent=2, sort_keys=True)
