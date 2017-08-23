@@ -8,7 +8,7 @@ if len(sys.argv) != 2:
 	print 'Please supply a target key to search for.'
 	exit(1)
 
-target = sys.argv[1]
+target = sys.argv[1].lower()
 jsonoutput = json.loads(sys.stdin.read().rstrip())
 obj = {}
 lst = []
@@ -18,7 +18,7 @@ results = []
 def read_object(jsonobj):
 	obj_results = []
 	for key, value in jsonobj.iteritems():
-		if key == target:
+		if key.lower() == target:
 			result = {key: value}
 			obj_results.append(result)
 
@@ -50,7 +50,7 @@ def read_list(jsonlist):
 			if result is not None:
 				lst_results.append(result)
 
-		elif item == target:
+		elif item.lower() == target:
 			lst_results.append(item)
 	if len(lst_results) == 0:
 		return None
