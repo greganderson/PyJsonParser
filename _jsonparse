@@ -18,7 +18,7 @@ results = []
 def read_object(jsonobj):
 	obj_results = []
 	for key, value in jsonobj.iteritems():
-		if key.lower() == target:
+		if target in key.lower():
 			result = {key: value}
 			obj_results.append(result)
 
@@ -50,7 +50,7 @@ def read_list(jsonlist):
 			if result is not None:
 				lst_results.append(result)
 
-		elif item.lower() == target:
+		elif target in item.lower():
 			lst_results.append(item)
 	if len(lst_results) == 0:
 		return None
